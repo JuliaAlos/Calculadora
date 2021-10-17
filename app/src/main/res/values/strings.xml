@@ -25,6 +25,7 @@
     <string name="degree">°</string>
     <string name="radiants">rad</string>
     <string name="pi">π</string>
+    <string name="percent">%</string>
 
     <string name="display">Entra un valor</string>
 </resources>

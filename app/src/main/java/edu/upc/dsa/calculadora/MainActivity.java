@@ -5,21 +5,20 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
-    protected EditText textNumber;
-    protected EditText textData;
+    protected TextView textNumber;
+    protected TextView textData;
     private Double numA;
     private Double numB;
     private String numChar;
     private String operacio;
     private boolean piPress;
+    private boolean percentPress;
     private boolean modeDegree;
     private boolean newOp;
 
@@ -39,13 +38,12 @@ public class MainActivity extends AppCompatActivity {
         numChar = null;
         operacio = null;
         piPress=false;
+        percentPress=false;
         modeDegree=true;
         newOp=false;
 
         textNumber = findViewById(R.id.textResult);
         textData = findViewById(R.id.textData);
-        textNumber.setShowSoftInputOnFocus(false);
-        textData.setShowSoftInputOnFocus(false);
         textNumber.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -58,17 +56,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClick(View v) {
+        Button button = (Button) v;
         if(newOp){
             numA=null;operacio =null;numB=null;
             textData.setText("");
             textNumber.setText("");
             newOp=false;
         }
-        if(!piPress) {
-            Button button = (Button) v;
+        if(getString(R.string.dot).equals(button.getText().toString())){
+            button.setEnabled(false);
+        }
+        if(!piPress && !percentPress) {
+
             if (numA == null) {
                 try {
-                     numChar = button.getText().toString();
+                    numChar = button.getText().toString();
                     numA = Double.parseDouble(numChar);
                 }catch(Exception e){
                     numChar = "0.";
@@ -103,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
                 textNumber.setText(numChar);
                 numB = Double.parseDouble(numChar);
             }
+
         }
 
         //Log.d("MYAPP", "He pulsado el boton");
@@ -135,6 +138,11 @@ public class MainActivity extends AppCompatActivity {
         textNumber.setText(operacio);
         newOp=false;
         piPress=false;
+        percentPress=false;
+        Button btn=(Button) findViewById(R.id.buttonComa);
+        btn.setEnabled(true);
+        btn=(Button) findViewById(R.id.buttonPercen);
+        btn.setEnabled(true);
 
     }
     public void onEqual(View v){
@@ -149,7 +157,14 @@ public class MainActivity extends AppCompatActivity {
         operacio=null;
         numA=null;
         numB=null;
-        textNumber.setText("");
+        Button button=(Button) findViewById(R.id.buttonComa);
+        button.setEnabled(true);
+        button=(Button) findViewById(R.id.buttonPercen);
+        button.setEnabled(true);
+        piPress=false;
+        percentPress=false;
+
+        textNumber.setText(R.string.display);
         textData.setText("");
     }
     public void onPi(View v){
@@ -160,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
         }
         if(numA==null){
             numA=Math.PI;
-            textNumber.setText("π");
+            textNumber.setText(R.string.pi);
         }
         else if(operacio==null){
             textNumber.setText(numA+"π");
@@ -168,13 +183,12 @@ public class MainActivity extends AppCompatActivity {
         }
         else if(numB==null){
             numB=Math.PI;
-            textNumber.setText("π");
+            textNumber.setText(R.string.pi);
         }
         else{
             textNumber.setText(numB+"π");
             numB=numB*Math.PI;
         }
-
         piPress=true;
     }
     public void onTrigo(View v){
@@ -205,6 +219,12 @@ public class MainActivity extends AppCompatActivity {
             textNumber.setText("= " + numA);
             textData.setText("");
             newOp=true;
+            piPress=false;
+            percentPress=false;
+            Button btn=(Button) findViewById(R.id.buttonComa);
+            btn.setEnabled(true);
+            btn=(Button) findViewById(R.id.buttonPercen);
+            btn.setEnabled(true);
         }
 
     }
@@ -217,6 +237,21 @@ public class MainActivity extends AppCompatActivity {
         else {
             modeDegree = true;
             button.setText("°");
+        }
+    }
+    public void onPercent(View v){
+        Button button=(Button) v;
+        if(operacio==null&&numA!=null){
+            textNumber.setText(numA+"%");
+            numA=numA/100;
+            percentPress=true;
+            button.setEnabled(false);
+        }
+        else if(numB!=null){
+            textNumber.setText(numB+"%");
+            numB=numB/100;
+            percentPress=true;
+            button.setEnabled(false);
         }
     }
 }
