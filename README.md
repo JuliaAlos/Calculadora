@@ -1,2 +1,2 @@
 # Calculadora
-* Júlia Alós
+* Júlia Alós Mairal
